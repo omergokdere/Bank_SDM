@@ -1,5 +1,6 @@
 package Banking;
 
+import Interest.InterestManager;
 import Reporting.Visitor;
 
 import java.util.Date;
@@ -16,10 +17,6 @@ public interface IAccount {
 	public void setOpening_date(Date opening_date);
 	public Double getBalance();
 	public void setBalance(Double balance);
-	
-	public Double getInterest();
-
-	public void setInterest(Double interest);
 
 	public Boolean getAccountType();
 
@@ -36,4 +33,8 @@ public interface IAccount {
     IAccount accept(Visitor visitor);
 
     void deposit(Double amount, IAccount account);
+
+	public InterestManager getInteresState();
+
+	public void setInteresState(InterestManager interesState);
 }

@@ -1,5 +1,6 @@
 package Banking;
 
+import Interest.InterestManager;
 import Reporting.Visitor;
 
 import java.util.Date;
@@ -11,29 +12,27 @@ public class Account implements IAccount {
 	private String owner;
 	private Date opening_date;
 	private Double balance;
-	private Double interest;
 	private Boolean accountType;
 	private Double debitLimit;
+	private InterestManager interesState;
 	
-	public Account() {
-		
-	}
-	
-	public Account(int iD, String owner, Date opening_date, Double balance, Boolean debit) {
+	public Account(int iD, String owner, Date opening_date, Double balance, Boolean debit, InterestManager interestManager) {
 		super();
 		ID = iD;
 		this.owner = owner;
 		this.opening_date = opening_date;
 		this.balance = balance;
 		this.accountType = debit;
+		this.interesState = interestManager;
 	}
 
-	public Account(int ID, String owner, Date opening_date, Double balance, Boolean accountType, Double debitLimit) {
+	public Account(int ID, String owner, Date opening_date, Double balance, Boolean accountType, InterestManager interestManager, Double debitLimit) {
 		this.ID = ID;
 		this.owner = owner;
 		this.opening_date = opening_date;
 		this.balance = balance;
 		this.accountType = accountType;
+		this.interesState = interestManager;
 		this.debitLimit = debitLimit;
 	}
 
@@ -68,14 +67,6 @@ public class Account implements IAccount {
 		this.balance = balance;
 	}
 	@Override
-	public Double getInterest() {
-		return interest;
-	}
-	@Override
-	public void setInterest(Double interest) {
-		this.interest = interest;
-	}
-	@Override
 	public Boolean getAccountType() {
 		return accountType;
 	}
@@ -99,6 +90,16 @@ public class Account implements IAccount {
 	public void setAccount(Account account) { this.getClass();	}
 
 	@Override
+	public InterestManager getInteresState() {
+		return interesState;
+	}
+
+	@Override
+	public void setInteresState(InterestManager interesState) {
+		this.interesState = interesState;
+	}
+
+	@Override
 	public IAccount withdraw(Double amount, IAccount account) throws Exception{
 		if(account.getBalance().equals(0.0) || account.getBalance() < amount)
 			throw new Exception("You don't have enough balance");
@@ -108,11 +109,13 @@ public class Account implements IAccount {
 	}
 
 	public IAccount accept(Visitor visitor) {
+
 		return visitor.visit(this);
 	}
 
 	@Override
 	public void deposit(Double amount, IAccount account) {
+
 		account.setBalance(account.getBalance() + amount);
 	}
 }

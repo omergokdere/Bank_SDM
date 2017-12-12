@@ -1,17 +1,15 @@
 package MainPackage;
 
-import Banking.Bank;
-import Banking.IAccount;
-import Banking.TransferCommand;
+import Banking.*;
+
+import Interest.*;
 import Mediator.BanksMediator;
-import Reporting.GetAllAccounts;
-import Reporting.Over1000Report;
+import Reporting.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import Banking.*;
 
 
 public class MainClass {
@@ -49,17 +47,17 @@ public class MainClass {
 
 	private static Bank createBankA() {
 		Bank bankA = new Bank(1, "WBK");
-		bankA.getAccounts().add(new Account(1, "Hamza", new Date(), 8500.00, false));
-		bankA.getAccounts().add(new Account(2, "Rohail", new Date(), 1200.00, false));
-		bankA.getAccounts().add(new DebitAccount(new Account(3, "Omer", new Date(), 1500.00, true, 500.00)));
+		bankA.getAccounts().add(new Account(1, "Hamza", new Date(), 8500.00, false, new BasicInterest()));
+		bankA.getAccounts().add(new Account(2, "Rohail", new Date(), 1200.00, false, new SpecialInterest()));
+		bankA.getAccounts().add(new DebitAccount(new Account(3, "Omer", new Date(), 1500.00, true, new BasicInterest(),500.00)));
 		return bankA;
 	}
 
 	private static Bank createBankB() {
 		Bank bankA = new Bank(2, "MCB");
-		bankA.getAccounts().add(new Account(1, "Ahmad", new Date(), 1000.00, false));
-		bankA.getAccounts().add(new Account(2, "Hafiz", new Date(), 1800.00, false));
-		bankA.getAccounts().add(new DebitAccount(new Account(3, "Hassan", new Date(), 8000.00, true, 500.00)));
+		bankA.getAccounts().add(new Account(1, "Ahmad", new Date(), 1000.00, false, new BasicInterest()));
+		bankA.getAccounts().add(new Account(2, "Hafiz", new Date(), 1000.00, false, new SpecialInterest()));
+		bankA.getAccounts().add(new DebitAccount(new Account(3, "Hassan", new Date(), 8000.00, true, new BasicInterest(), 500.00)));
 		return bankA;
 	}
 
@@ -74,6 +72,7 @@ public class MainClass {
 		System.out.println("5. View Over 1000 report");
 		System.out.println("6. View Accounts");
 		System.out.println("7. Inter Banking transfer");
+		System.out.println("8. Calculate Interest");
 
 		option = new Scanner(System.in).nextInt();
 		List<IAccount> resultList = new ArrayList<>();
@@ -90,8 +89,23 @@ public class MainClass {
 					System.out.println("Would you like to open debit account? (y/n)");
 					String type = new Scanner(System.in).next();
 
-					if (bank.openAccount(name, balance, type.equals("y") || type.equals("Y") ? true : false)) {
-						System.out.println("Banking.Account has been created successfully");
+					System.out.println("Press '1' for Basic Interest and '2' for Special Interest");
+					int interestType = new Scanner(System.in).nextInt();
+					InterestManager interestManager;
+					switch (interestType) {
+						case 1:
+							interestManager = new BasicInterest();
+							break;
+						case 2:
+							interestManager = new SpecialInterest();
+							break;
+						default:
+							interestManager = new BasicInterest();
+							break;
+					}
+
+					if (bank.openAccount(name, balance, type.equals("y") || type.equals("Y") ? true : false , interestManager)) {
+						System.out.println("Account has been created successfully");
 					}
 
 					break;
@@ -105,7 +119,7 @@ public class MainClass {
 					name = System.console().readLine();
 
 					if (bank.creditAccount(name, credit)) {
-						System.out.println("Banking.Account has been created successfully");
+						System.out.println("Account has been created successfully");
 					}
 					break;
 
@@ -208,15 +222,13 @@ public class MainClass {
 						throw e;
 					}
 
-					//id successful then return otherwise add money to sender account
-
-
-					/*EFTCommand eftCommand = new EFTCommand();
-					eftCommand.setToBankName(bankName);
-					eftCommand.setFromBankName(bank.getName());
-					eftCommand.setAmount(amount);
-					banksMediator.eft(bankName, accNo, amount, eftCommand);*/
-
+					break;
+				case 8:
+					System.out.println("Enter account number");
+					in = new Scanner(System.in);
+					accountNo = in.nextInt();
+					Double interest = bank.calculateInterest(accountNo);
+					System.out.println("Interest on your current balance is = " + interest);
 					break;
 
 				default:

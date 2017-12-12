@@ -24,28 +24,4 @@ public class TransferCommand implements Operations{
 		toAccount.setBalance(toAccount.getBalance() + amount);
 		
 	}
-
-	public Account getToAccount() {
-		return toAccount;
-	}
-
-	public void setToAccount(Account toAccount) {
-		this.toAccount = toAccount;
-	}
-
-	public Account getFromAccount() {
-		return fromAccount;
-	}
-
-	public void setFromAccount(Account fromAccount) {
-		this.fromAccount = fromAccount;
-	}
-
-	public Double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Double amount) {
-		this.amount = amount;
-	}
 }

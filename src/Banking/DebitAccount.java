@@ -1,5 +1,6 @@
 package Banking;
 
+import Interest.InterestManager;
 import Reporting.Visitor;
 
 import java.util.Date;
@@ -33,6 +34,16 @@ public class DebitAccount implements IAccount {
 	@Override
 	public void deposit(Double amount, IAccount account) {
 		account.deposit(amount, account);
+	}
+
+	@Override
+	public InterestManager getInteresState() {
+		return null;
+	}
+
+	@Override
+	public void setInteresState(InterestManager interesState) {
+
 	}
 
 	@Override
@@ -102,16 +113,6 @@ public class DebitAccount implements IAccount {
 	@Override
 	public void setBalance(Double balance) {
 		account.setBalance(balance);
-	}
-
-	@Override
-	public Double getInterest() {
-		return account.getInterest();
-	}
-
-	@Override
-	public void setInterest(Double interest) {
-		account.setInterest(interest);
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package Banking;
 
+import Interest.*;
 import Reporting.Visitor;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 public class Bank {
 	
@@ -35,7 +35,7 @@ public class Bank {
 		return accounts;
 	}
 
-	public boolean openAccount(String name, Double balance, Boolean debit) {
+	public boolean openAccount(String name, Double balance, Boolean debit, InterestManager interestManager) {
 			
 		if(!accounts.isEmpty()) {
 			ID++;
@@ -45,7 +45,7 @@ public class Bank {
 			return false;
 		
 		int accId = accounts.get(accounts.size()-1).getID() + 1;
-		Account newAccount = new Account(accId, name, new Date(), balance, debit);
+		Account newAccount = new Account(accId, name, new Date(), balance, debit, interestManager);
 		boolean accCreated=false;
 		if (debit) 
 		{
@@ -125,4 +125,16 @@ public class Bank {
 		operations.execute();
 	}
 
+	public Double calculateInterest(int accountNo) throws Exception{
+		IAccount account = findAccount(accountNo);
+
+		if (account.getInteresState().getClass().equals(BasicInterest.class)) {
+			System.out.println("You have Basic interest mechanism attached to your account");
+		}
+		else {
+			System.out.println("You have Special interest mechanism attached to your account");
+		}
+
+		return account.getInteresState().calculateInterest(account.getBalance());
+	}
 }
